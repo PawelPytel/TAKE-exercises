@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+</head>
+<body>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#callAPIjQuery").click(function () {
+                var x = $("#x").val();
+                var y = $("#y").val();
+                $.ajax({
+                    type: "GET",
+                    data: { "x": x, "y": y },
+                    url: "/api/math"
+                }).done(function (result) {
+                    $("#sum").text(result.sum);
+                    $("#difference").text(result.difference);
+                    $("#product").text(result.product);
+                    $("#quotient").text(result.quotient);
+                });
+            });
+        });
+    </script>
+    <div>
+        <h1>Calculations</h1>
+        <form>
+            x = <input type="text" id="x" />
+            y = <input type="text" id="y" />
+            <input type="button" id="callAPIjQuery" value="Call API (jQuery)" />
+            <input type="button" id="callAPIvanillaJS" value="Call API (vanilla JS)" />
+        </form>
+        x + y = <span id="sum"></span><br />
+        x - y = <span id="difference"></span><br />
+        x * y = <span id="product"></span><br />
+        x / y = <span id="quotient"></span><br />
+    </div>
+    <script>
+        var button = document.getElementById("callAPIvanillaJS");
+        button.onclick = function () {
+            var x = document.getElementById("x").value;
+            var y = document.getElementById("y").value;
+            var request = new XMLHttpRequest();
+            request.open('GET', '/api/math?x=' + x + '&y=' + y, true);
+            request.onreadystatechange = function () {
+                if (request.readyState == 4) {
+                    if (request.status == 200) {
+                        var result = JSON.parse(request.responseText);
+                        document.getElementById("sum").textContent = result.sum;
+                        document.getElementById("difference").textContent = result.difference;
+                        document.getElementById("product").textContent = result.product;
+                        document.getElementById("quotient").textContent = result.quotient;
+                    }
+                }
+            }
+            request.send();
+        }
+    </script>
+</body>
+</html>
